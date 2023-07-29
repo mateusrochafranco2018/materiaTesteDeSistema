@@ -7,13 +7,14 @@ from pages.PageObject import PageObject
 
 
 class ProductsPage(PageObject):
+
     url = 'https://www.saucedemo.com/inventory.html'
     class_title_page = 'title'
     txt_products_title = 'Products'
     class_product_item = 'inventory_item'
     id_menu_btn = "react-burger-menu-btn"
-    class_prooduct_card = 'inventory_item'
-    class_add_to_card_btn = 'btn_primary'
+    class_product_card = 'inventory_item'
+    class_add_to_cart_btn = 'btn_primary'
     class_cart_badge = 'shopping_cart_badge'
     class_cart_btn = 'shopping_cart_link'
 
@@ -38,13 +39,13 @@ class ProductsPage(PageObject):
             return False
 
     def add_random_product_to_cart(self):
-        product_list = self.driver.find_elements(By.CLASS_NAME, self.class_prooduct_card)
+        product_list = self.driver.find_elements(By.CLASS_NAME, self.class_product_card)
         random_product = randint(0, len(product_list) - 1)
         product_element = product_list[random_product]
-        product_element.find_element(By.CLASS_NAME, self.class_add_to_card_btn).click()
+        product_element.find_element(By.CLASS_NAME, self.class_add_to_cart_btn).click()
 
-    def get_cart_badge(self):
-        return self.driver.find_element(By.CLASS_NAME, self.class_cart_badge).text
+    def get_cart_badge_number(self):
+        return int(self.driver.find_element(By.CLASS_NAME, self.class_cart_badge).text)
 
     def open_cart(self):
         self.driver.find_element(By.CLASS_NAME, self.class_cart_btn).click()

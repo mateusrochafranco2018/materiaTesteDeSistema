@@ -1,3 +1,5 @@
+import time
+
 import pytest
 
 from pages.LoginPage import LoginPage
@@ -12,15 +14,16 @@ def setup():
 
 
 @pytest.fixture
-def login_soucedemo(setup):
+def login_saucedemo(setup):
     login_page = setup
     login_page.efetuar_login()
     yield login_page
 
 
 @pytest.fixture
-def has_product_in_cart(login_soucedemo):
-    product_page = ProductsPage(driver=login_soucedemo.driver)
+def has_product_in_cart(login_saucedemo):
+    product_page = ProductsPage(driver=login_saucedemo.driver)
     product_page.add_random_product_to_cart()
-    assert product_page.get_cart_badge() == '1', 'Quntidade de Produto'
+    assert product_page.get_cart_badge_number() == 1, 'Quantidade de produtos no carrinho está incorreta!'
     yield product_page
+
