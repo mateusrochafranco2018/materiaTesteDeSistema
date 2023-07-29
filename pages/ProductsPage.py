@@ -9,7 +9,6 @@ from pages.PageObject import PageObject
 class ProductsPage(PageObject):
 
     url = 'https://www.saucedemo.com/inventory.html'
-    class_title_page = 'title'
     txt_products_title = 'Products'
     class_product_item = 'inventory_item'
     id_menu_btn = "react-burger-menu-btn"
@@ -17,17 +16,26 @@ class ProductsPage(PageObject):
     class_add_to_cart_btn = 'btn_primary'
     class_cart_badge = 'shopping_cart_badge'
     class_cart_btn = 'shopping_cart_link'
+    class_product_name = 'inventory_item_name'
+    class_remove_btn = 'btn_secondary'
+    text_remove_btn = 'Remove'
+    text_add_to_cart_btn = 'Add to cart'
+    class_filltro = 'product_sort_container'
+    css_lohi = '[value="lohi"]'
+    class_item_price = 'inventory_item_price'
 
     def __init__(self, driver):
         super(ProductsPage, self).__init__(driver=driver)
 
     def is_url_products(self):
-        return self.driver.current_url == self.url
+        return self.is_url(self.url)
 
     def has_products_title(self):
-        title_page = self.driver.find_element(By.CLASS_NAME, self.class_title_page).text
-        return title_page == self.txt_products_title
-
+        return self.has_title(self.txt_products_title)
+    
+    def check_product_pages(self):
+        return self.check_page(self.url, self.txt_products_title)
+    
     def validate_products_in_page(self):
         products_list = self.driver.find_elements(By.CLASS_NAME, self.class_product_item)
         return len(products_list) == 6
@@ -42,10 +50,32 @@ class ProductsPage(PageObject):
         product_list = self.driver.find_elements(By.CLASS_NAME, self.class_product_card)
         random_product = randint(0, len(product_list) - 1)
         product_element = product_list[random_product]
+        add_to_cart_text = product_element.find_element(By.CLASS_NAME, self.class_add_to_cart_btn).text
+        if add_to_cart_text != self.text_add_to_cart_btn:
+            raise Exception('Add to cart button not found!')
         product_element.find_element(By.CLASS_NAME, self.class_add_to_cart_btn).click()
+        button_remove_text = product_element.find_element(By.CLASS_NAME, self.class_remove_btn).text
+        if button_remove_text != self.text_remove_btn:
+            raise Exception('Remove button not found!')
+        return product_element.find_element(By.CLASS_NAME, self.class_product_name).text
 
     def get_cart_badge_number(self):
         return int(self.driver.find_element(By.CLASS_NAME, self.class_cart_badge).text)
 
     def open_cart(self):
         self.driver.find_element(By.CLASS_NAME, self.class_cart_btn).click()
+
+    def filtrar_opcao_lohi(self):
+        self.driver.find_element(By.CLASS_NAME, self.class_filltro).click()
+        self.driver.find_element(By.CSS_SELECTOR, self.css_lohi).click()
+
+    def check_order_by_price_low_to_high(self):
+        all_price_items = self.driver.find_elements(By.CLASS_NAME, self.class_item_price)
+
+        for i in range(len(all_price_items) - 1):
+            current_price = float(all_price_items[i].text.replace('$', ''))
+            next_price = float(all_price_items[i + 1].text.replace('$', ''))
+            if current_price > next_price:
+                return False
+            return True
+
