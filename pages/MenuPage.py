@@ -1,4 +1,4 @@
-from selenium.common import NoSuchElementException
+import selenium.common
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -22,7 +22,7 @@ class MenuPage(PageObject):
         try:
             self.driver.find_element(By.ID, self.id_menu_close)
             return True
-        except NoSuchElementException:
+        except selenium.common.NoSuchElementException:
             return False
 
     def click_logout(self):
