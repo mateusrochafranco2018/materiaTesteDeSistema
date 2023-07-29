@@ -14,7 +14,7 @@ class CheckoutYourInfoPage(PageObject):
         super(CheckoutYourInfoPage, self).__init__(driver=driver)
 
     def check_your_info_page(self):
-        return self.check_pagge(self.url, self.text_cart_title)
+        return self.check_page(self.url, self.text_cart_title)
 
     def click_continue(self):
         self.driver.find_element(By.CSS_SELECTOR, self.css_checkout_btn).click()

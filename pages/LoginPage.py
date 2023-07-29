@@ -12,8 +12,8 @@ class LoginPage(PageObject):
     id_username = 'user-name'
     id_password = 'password'
 
-    def __init__(self):
-        super(LoginPage, self).__init__()
+    def __init__(self, browser):
+        super(LoginPage, self).__init__(browser=browser)
         self.driver.get(self.url)
 
     def click_login_btn(self):
